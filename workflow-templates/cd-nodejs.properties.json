@@ -1,6 +1,6 @@
 {
     "name": "GrowingIO CD Workflow - Node.js®",
-    "description": "GrowingIO Continuous delivery starter workflow for Node.js®.",
+    "description": "GrowingIO continuous delivery starter workflow for Node.js®.",
     "iconName": "node-js",
     "categories": [
         "JavaScript",
