@@ -1,8 +1,8 @@
 name: Continuous delivery for Node.js®
-on:
-  schedule:
-    - cron: '* 3 * * 3'
-  workflow_dispatch:
+
+# trigger examples
+# on:
+#   workflow_dispatch:
 
 jobs:
   publish-package:
@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         if: ${{ steps.cache-node-modules.outputs.cache-hit != 'true' }}
         run: yarn install
-      # set preversion hook for building package
+      # setup semantic-release and set preversion hook for building package
       - name: Semantic release
         run: npx semantic-release
         env:
