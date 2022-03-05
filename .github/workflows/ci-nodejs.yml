@@ -1,5 +1,8 @@
 name: Continuous Integration for Node.js®
 
+on:
+  workflow_call:
+
 jobs:
   preparation:
     name: Preparation
