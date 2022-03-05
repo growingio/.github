@@ -1,0 +1,86 @@
+name: Continuous Integration for Node.js®
+
+jobs:
+  preparation:
+    name: Preparation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v2.1.7
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+      - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
+  linting:
+    name: Linting
+    needs: preparation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Restore node_modules
+        uses: actions/cache@v2.1.7
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+      - name: StyleLint
+        run: yarn run stylelint
+      - name: ESLint
+        run: yarn run eslint
+  testing:
+    name: Testing
+    needs: preparation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Restore node_modules
+        uses: actions/cache@v2.1.7
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+      - name: Unit test
+        run: yarn run test --coverage
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage-report
+          path: coverage
+  building:
+    name: Building
+    needs: preparation
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [14, 16, 17]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Restore node_modules
+        uses: actions/cache@v2.1.7
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+      - name: Build package
+        run: yarn run build

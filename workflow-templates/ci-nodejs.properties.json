@@ -1,0 +1,12 @@
+{
+    "name": "GrowingIO CI Workflow - Node.js®",
+    "description": "GrowingIO continuous integration starter workflow for Node.js®.",
+    "iconName": "node-js",
+    "categories": [
+        "JavaScript",
+        "TypeScript"
+    ],
+    "filePatterns": [
+        "package.json$"
+    ]
+}
